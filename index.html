@@ -1,168 +1,287 @@
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>প্রবাসী খাবার হিসাব</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>প্রবাসী মেস ম্যানেজমেন্ট</title>
 <style>
+:root{--green:#087b52;--deep:#07583f;--dark:#173c2e;--bg:#f1f7f3;--line:#dce9e0;--red:#b42318;--muted:#71847a}
 *{box-sizing:border-box}
-body{margin:0;background:#f1f5f2;color:#18352b;font-family:Arial,sans-serif}
-header{background:#087b52;color:white;padding:22px 16px;border-radius:0 0 22px 22px}
-header h2{margin:0}
-header p{margin:8px 0 0;color:#d8f5e7}
-main{padding:16px;max-width:600px;margin:auto}
-.card{background:white;border-radius:16px;padding:17px;margin-bottom:15px;box-shadow:0 3px 12px #0000000c}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.stat{background:#e6f5ed;padding:16px;border-radius:13px}
-.stat small{color:#547263}
-.stat strong{display:block;font-size:22px;margin-top:8px}
-h3{margin:0 0 14px}
-label{display:block;margin:12px 0 6px;font-size:14px}
-input{width:100%;padding:13px;border:1px solid #d6e2db;border-radius:10px;font-size:16px;background:white}
-button{border:0;border-radius:10px;padding:13px 15px;background:#087b52;color:white;font-size:15px;font-weight:bold;cursor:pointer}
-.primary{width:100%;margin-top:16px}
-.secondary{background:#e6f5ed;color:#087b52}
-.danger{background:#ffe9e9;color:#b52c2c;padding:8px}
-.entry{border-bottom:1px solid #edf0ed;padding:12px 0;display:flex;justify-content:space-between;gap:8px;align-items:center}
-.entry:last-child{border:0}
-.entry small{color:#73857b}
-footer{text-align:center;color:#82938a;padding:20px}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--dark);font-family:system-ui,"Noto Sans Bengali",Arial,sans-serif;padding-bottom:92px}
+header{background:linear-gradient(135deg,#07583f,#07966a);color:#fff;padding:25px 19px 26px;border-radius:0 0 30px 30px;box-shadow:0 8px 24px #075d4020}
+header h1{font-size:clamp(20px,5vw,25px);line-height:1.45;margin:0}
+header p{margin:8px 0 0;color:#e0f7eb;font-size:14px;line-height:1.6}
+main{max-width:680px;margin:auto;padding:17px 14px 24px}
+nav{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;position:fixed;z-index:20;left:0;right:0;bottom:0;margin:auto;max-width:680px;padding:9px 7px calc(9px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--line);box-shadow:0 -7px 24px #173c2e12}
+nav button{white-space:normal;background:transparent;color:#667b70;padding:8px 2px;border-radius:14px;font-size:10px;line-height:1.35;min-height:55px}
+nav button.active{background:#e7f4eb;color:var(--green)}
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px;margin:0 0 14px;box-shadow:0 5px 18px #173c2e09}
+h2{font-size:19px;margin:0 0 14px}h3{font-size:16px;margin:0 0 11px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.stat{background:#e9f4ed;padding:16px;border-radius:18px;min-height:104px}
+.stat small{color:#627b6d;font-size:14px}
+.stat strong{display:block;font-size:23px;margin-top:7px;color:#123d2d}
+label{display:block;font-size:14px;margin:12px 0 6px;color:#385d4b}
+input,select{width:100%;padding:13px;border:1px solid #d2e0d6;border-radius:13px;background:#fff;font-size:16px;color:#173b2e}
+input:focus,select:focus{border-color:#0b9567;outline:2px solid #0b956718}
+button{border:0;border-radius:12px;background:var(--green);color:white;padding:12px 15px;font-size:14px;font-weight:700;cursor:pointer}
+button.secondary{background:#e7f3eb;color:#086143}
+button.danger{background:#fff0ef;color:var(--red);padding:8px 11px}
+button.full{width:100%;margin-top:13px}
+.row{display:flex;gap:9px;align-items:end}
+.row>*{flex:1;min-width:0}
+.item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:13px 0;border-bottom:1px solid #edf2ee}
+.item:last-child{border-bottom:0}
+.muted{font-size:12px;color:var(--muted)}
+.amount{font-weight:800;white-space:nowrap}
+.hidden{display:none!important}
+.hint{font-size:13px;color:#71847a;line-height:1.8}
+.pill{display:inline-block;background:#eaf5ee;color:#176246;padding:4px 10px;border-radius:20px;font-size:12px}
+footer{text-align:center;color:#7b8c82;padding:18px;font-size:12px}
+@media(max-width:480px){
+.grid{gap:9px}.stat{padding:14px;border-radius:17px;min-height:98px}
+.stat strong{font-size:21px}
+.row{flex-direction:column;align-items:stretch}.row>*{width:100%}
+input,select{min-height:47px}
+button{min-height:43px}
+h2{font-size:18px}
+}
+@media(min-width:681px){nav{bottom:18px;border:1px solid var(--line);border-radius:18px}body{padding-bottom:110px}}
 </style>
 </head>
 <body>
 <header>
-<h2>🍽️ প্রবাসী খাবার হিসাব</h2>
-<p>আপনার প্রতিদিনের খাবারের খরচ রাখুন</p>
+<h1>🍽️ প্রবাসী মেস ম্যানেজমেন্ট</h1>
+<p>রুম, সদস্য, মিল, বাজার ও টাকা-পয়সার হিসাব এক জায়গায়</p>
 </header>
 <main>
-<div class="stats">
-<div class="stat"><small>আজকের খরচ</small><strong id="today">৳০</strong></div>
-<div class="stat"><small>এই মাসের খরচ</small><strong id="month">৳০</strong></div>
+<nav>
+<button class="active" data-tab="home">🏠<br>হোম</button>
+<button data-tab="rooms">👥<br>সদস্য</button>
+<button data-tab="meals">🍚<br>মিল</button>
+<button data-tab="market">🛒<br>বাজার</button>
+<button data-tab="money">💰<br>জমা</button>
+<button data-tab="report">📊<br>রিপোর্ট</button>
+</nav>
+<section id="home" class="tab">
+<div class="grid">
+<div class="stat"><small>মোট সদস্য</small><strong id="totalMembers">০</strong></div>
+<div class="stat"><small>এই মাসের মিল</small><strong id="totalMeals">০</strong></div>
+<div class="stat"><small>এই মাসের বাজার</small><strong id="totalMarket">৳০</strong></div>
+<div class="stat"><small>এই মাসে জমা</small><strong id="totalPaid">৳০</strong></div>
 </div>
 <div class="card" style="margin-top:15px">
-<h3>💰 মাসিক বাজেট</h3>
-<label>আপনার মাসিক বাজেট (টাকা)</label>
-<input id="budget" type="number" min="0" placeholder="যেমন 5000">
-<button class="primary" onclick="saveBudget()">বাজেট সংরক্ষণ</button>
-<p id="remaining">বাকি বাজেট: ৳০</p>
+<h2>মেসের সারাংশ</h2>
+<p id="summary" class="hint">এই মাসের হিসাব এখানে দেখা যাবে।</p>
 </div>
 <div class="card">
-<h3>➕ নতুন খাবারের খরচ</h3>
-<label>তারিখ</label>
-<input type="date" id="date">
-<label>খাবারের নাম</label>
-<input id="food" placeholder="যেমন ভাত, মাছ, সবজি">
-<label>খরচ (টাকা)</label>
-<input id="amount" type="number" min="0.01" step="0.01" placeholder="যেমন 100">
-<label>নোট</label>
-<input id="note" placeholder="অতিরিক্ত তথ্য (ঐচ্ছিক)">
-<button class="primary" onclick="addExpense()">খরচ যোগ করুন</button>
+<h2>শুরু করার নিয়ম</h2>
+<p class="hint">১) রুম তৈরি করুন → ২) সদস্য যোগ করুন → ৩) প্রতিদিন সদস্যদের মিল লিখুন → ৪) বাজার খরচ ও জমা টাকা লিখুন → ৫) রিপোর্টে প্রত্যেকের হিসাব দেখুন।</p>
 </div>
 <div class="card">
-<h3>📋 খরচের তালিকা</h3>
-<div id="entries">এখনো কোনো খরচ যোগ করা হয়নি।</div>
+<p class="hint">⚠️ তথ্য এই ডিভাইসের ব্রাউজারে সংরক্ষিত হয়। অন্য সদস্যের মোবাইলে নিজে থেকে সিঙ্ক হবে না। নিয়মিত ব্যাকআপ ডাউনলোড করুন।</p>
+<button class="secondary full" onclick="backup()">ব্যাকআপ ডাউনলোড</button>
+</div>
+</section>
+
+<section id="rooms" class="tab hidden">
+<div class="card">
+<h2>🏢 রুম যোগ করুন</h2>
+<label>রুমের নাম</label>
+<input id="roomName" placeholder="যেমন: রুম ১০১">
+<button class="full" onclick="addRoom()">রুম যোগ করুন</button>
+<div id="roomList"></div>
 </div>
 <div class="card">
-<h3>📊 হিসাব ডাউনলোড</h3>
-<button class="primary" onclick="downloadCSV()">CSV হিসাব ডাউনলোড</button>
-<button class="primary secondary" onclick="resetData()">সব হিসাব মুছুন</button>
+<h2>👥 নতুন সদস্য যোগ করুন</h2>
+<label>সদস্যের নাম</label><input id="memberName" placeholder="সদস্যের নাম">
+<label>মোবাইল নম্বর (ঐচ্ছিক)</label><input id="memberPhone" placeholder="মোবাইল নম্বর">
+<label>রুম নির্বাচন</label><select id="memberRoom"></select>
+<button class="full" onclick="addMember()">সদস্য যোগ করুন</button>
 </div>
+<div class="card">
+<h2>সদস্য তালিকা</h2>
+<div id="memberList"></div>
+</div>
+</section>
+
+<section id="meals" class="tab hidden">
+<div class="card">
+<h2>🍚 প্রতিদিনের মিল</h2>
+<label>তারিখ</label><input type="date" id="mealDate">
+<label>সদস্য</label><select id="mealMember"></select>
+<label>মিল সংখ্যা</label><input type="number" id="mealCount" min="0" step="0.5" value="1">
+<button class="full" onclick="addMeal()">মিল যোগ করুন</button>
+</div>
+<div class="card"><h2>মিলের তালিকা</h2><div id="mealList"></div></div>
+</section>
+
+<section id="market" class="tab hidden">
+<div class="card">
+<h2>🛒 বাজার ও অন্যান্য খরচ</h2>
+<label>তারিখ</label><input type="date" id="marketDate">
+<label>খরচের বিবরণ</label><input id="marketNote" placeholder="যেমন: চাল, ডাল, মাছ">
+<label>টাকার পরিমাণ</label><input type="number" id="marketAmount" min="0" step="0.01" placeholder="টাকা">
+<label>কে বাজার করেছেন</label><select id="marketBuyer"></select>
+<button class="full" onclick="addMarket()">খরচ যোগ করুন</button>
+</div>
+<div class="card"><h2>বাজারের তালিকা</h2><div id="marketList"></div></div>
+</section>
+
+<section id="money" class="tab hidden">
+<div class="card">
+<h2>💰 সদস্যের টাকা জমা</h2>
+<label>তারিখ</label><input type="date" id="payDate">
+<label>সদস্য</label><select id="payMember"></select>
+<label>জমার পরিমাণ</label><input type="number" id="payAmount" min="0" step="0.01" placeholder="টাকা">
+<label>বিবরণ (ঐচ্ছিক)</label><input id="payNote" placeholder="যেমন: মাসের জমা">
+<button class="full" onclick="addPayment()">জমা যোগ করুন</button>
+</div>
+<div class="card"><h2>জমার তালিকা</h2><div id="paymentList"></div></div>
+</section>
+
+<section id="report" class="tab hidden">
+<div class="card">
+<h2>📊 মাসিক রিপোর্ট</h2>
+<label>মাস নির্বাচন</label><input type="month" id="reportMonth">
+<div id="reportResult"></div>
+<button class="secondary full" onclick="exportCSV()">CSV রিপোর্ট ডাউনলোড</button>
+<button class="secondary full" onclick="backup()">সম্পূর্ণ ব্যাকআপ ডাউনলোড</button>
+<label>ব্যাকআপ ফাইল থেকে তথ্য ফিরিয়ে আনুন</label>
+<input type="file" id="restoreFile" accept=".json,application/json">
+<button class="full" onclick="restoreBackup()">ব্যাকআপ ফিরিয়ে আনুন</button>
+</div>
+</section>
+<footer>❤️ প্রবাসী মেস ম্যানেজমেন্ট</footer>
 </main>
-<footer>❤️ আপনার প্রবাসী জীবনের হিসাব</footer>
+
 <script>
-let expenses=JSON.parse(localStorage.getItem("foodExpenses")||"[]");
-let budget=Number(localStorage.getItem("foodBudget")||0);
-function todayDate(){
-let d=new Date();
-return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const KEY='probashiMessV2';
+let db=JSON.parse(localStorage.getItem(KEY)||'{"rooms":[],"members":[],"meals":[],"markets":[],"payments":[]}');
+const $=id=>document.getElementById(id);
+const today=()=>new Date().toISOString().slice(0,10);
+const monthNow=()=>today().slice(0,7);
+const money=n=>'৳'+Number(n||0).toLocaleString('bn-BD',{maximumFractionDigits:2});
+const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
+function memberName(id){return db.members.find(m=>m.id==id)?.name||'মুছে ফেলা সদস্য'}
+function options(id,items,placeholder){$(id).innerHTML='<option value="">'+placeholder+'</option>'+items.map(x=>'<option value="'+x.id+'">'+safe(x.name)+'</option>').join('')}
+function addRoom(){
+ let name=$('roomName').value.trim();if(!name)return alert('রুমের নাম লিখুন');
+ db.rooms.push({id:Date.now()+Math.random(),name});$('roomName').value='';save()
 }
-document.getElementById("date").value=todayDate();
-document.getElementById("budget").value=budget;
-function money(n){return "৳"+Number(n).toLocaleString("bn-BD");}
-function save(){
-localStorage.setItem("foodExpenses",JSON.stringify(expenses));
+function delRoom(id){
+ if(db.members.some(m=>m.room==id))return alert('এই রুমে সদস্য আছে। আগে সদস্য অন্য রুমে দিন বা মুছুন।');
+ if(confirm('রুমটি মুছবেন?')){db.rooms=db.rooms.filter(x=>x.id!=id);save()}
 }
-function saveBudget(){
-budget=Math.max(0,Number(document.getElementById("budget").value)||0);
-localStorage.setItem("foodBudget",budget);
-render();
-alert("বাজেট সংরক্ষণ হয়েছে!");
+function addMember(){
+ let name=$('memberName').value.trim(),room=$('memberRoom').value;
+ if(!name)return alert('সদস্যের নাম লিখুন');
+ db.members.push({id:Date.now()+Math.random(),name,phone:$('memberPhone').value.trim(),room});
+ $('memberName').value='';$('memberPhone').value='';save()
 }
-function addExpense(){
-let date=document.getElementById("date").value;
-let food=document.getElementById("food").value.trim();
-let amount=Number(document.getElementById("amount").value);
-let note=document.getElementById("note").value.trim();
-if(!date||!food||!Number.isFinite(amount)||amount<=0){
-alert("তারিখ, খাবারের নাম ও সঠিক খরচ দিন।");
-return;
+function delMember(id){
+ if(confirm('সদস্য এবং তার সংশ্লিষ্ট হিসাব মুছবেন?')){
+ db.members=db.members.filter(x=>x.id!=id);
+ db.meals=db.meals.filter(x=>x.member!=id);
+ db.payments=db.payments.filter(x=>x.member!=id);
+ db.markets=db.markets.filter(x=>x.buyer!=id);
+ save()
+ }
 }
-expenses.unshift({id:Date.now(),date,food,amount,note});
-save();
-document.getElementById("food").value="";
-document.getElementById("amount").value="";
-document.getElementById("note").value="";
-render();
-alert("খরচ যোগ হয়েছে!");
+function addMeal(){
+ let member=$('mealMember').value,date=$('mealDate').value,count=Number($('mealCount').value);
+ if(!member||!date||count<=0)return alert('সদস্য, তারিখ ও মিল সংখ্যা ঠিকভাবে দিন');
+ db.meals.push({id:Date.now()+Math.random(),member,date,count});save()
 }
-function removeExpense(id){
-if(!confirm("এই খরচটি মুছে ফেলবেন?"))return;
-expenses=expenses.filter(x=>x.id!==id);
-save();
-render();
+function delItem(type,id){
+ if(confirm('এই তথ্যটি মুছবেন?')){db[type]=db[type].filter(x=>x.id!=id);save()}
+}
+function addMarket(){
+ let date=$('marketDate').value,note=$('marketNote').value.trim(),amount=Number($('marketAmount').value),buyer=$('marketBuyer').value;
+ if(!date||!note||amount<=0)return alert('তারিখ, বিবরণ ও টাকার পরিমাণ দিন');
+ db.markets.push({id:Date.now()+Math.random(),date,note,amount,buyer});$('marketNote').value='';$('marketAmount').value='';save()
+}
+function addPayment(){
+ let date=$('payDate').value,member=$('payMember').value,amount=Number($('payAmount').value);
+ if(!date||!member||amount<=0)return alert('তারিখ, সদস্য ও টাকার পরিমাণ দিন');
+ db.payments.push({id:Date.now()+Math.random(),date,member,amount,note:$('payNote').value.trim()});$('payAmount').value='';$('payNote').value='';save()
+}
+function inMonth(x,m){return x.startsWith(m)}
+function reportData(m){
+ let meals=db.meals.filter(x=>inMonth(x.date,m)),markets=db.markets.filter(x=>inMonth(x.date,m)),payments=db.payments.filter(x=>inMonth(x.date,m));
+ let totalMeals=meals.reduce((s,x)=>s+Number(x.count),0);
+ let totalMarket=markets.reduce((s,x)=>s+Number(x.amount),0);
+ let rate=totalMeals?totalMarket/totalMeals:0;
+ return {meals,markets,payments,totalMeals,totalMarket,rate}
 }
 function render(){
-let now=todayDate();
-let month=now.slice(0,7);
-let todayTotal=expenses.filter(x=>x.date===now).reduce((s,x)=>s+x.amount,0);
-let monthTotal=expenses.filter(x=>x.date.startsWith(month)).reduce((s,x)=>s+x.amount,0);
-document.getElementById("today").textContent=money(todayTotal);
-document.getElementById("month").textContent=money(monthTotal);
-document.getElementById("remaining").textContent="বাকি বাজেট: "+money(Math.max(0,budget-monthTotal))+" | অতিরিক্ত: "+money(Math.max(0,monthTotal-budget));
-let box=document.getElementById("entries");
-if(!expenses.length){box.textContent="এখনো কোনো খরচ যোগ করা হয়নি।";return;}
-box.innerHTML="";
-expenses.forEach(x=>{
-let row=document.createElement("div");
-row.className="entry";
-let left=document.createElement("div");
-let name=document.createElement("strong");
-name.textContent=x.food;
-let detail=document.createElement("small");
-detail.textContent=x.date+" • "+x.note;
-left.append(name,document.createElement("br"),detail);
-let right=document.createElement("div");
-right.style.textAlign="right";
-let price=document.createElement("strong");
-price.textContent=money(x.amount);
-let del=document.createElement("button");
-del.className="danger";
-del.textContent="মুছুন";
-del.onclick=()=>removeExpense(x.id);
-right.append(price,document.createElement("br"),del);
-row.append(left,right);
-box.append(row);
-});
+ let m=$('reportMonth').value||monthNow(),r=reportData(m);
+ $('totalMembers').textContent=db.members.length.toLocaleString('bn-BD');
+ $('totalMeals').textContent=r.totalMeals.toLocaleString('bn-BD');
+ $('totalMarket').textContent=money(r.totalMarket);
+ $('totalPaid').textContent=money(r.payments.reduce((s,x)=>s+Number(x.amount),0));
+ $('summary').textContent=`এই মাসে মোট বাজার ${money(r.totalMarket)} · মোট মিল ${r.totalMeals.toLocaleString('bn-BD')} · আনুমানিক মিল রেট ${money(r.rate)}।`;
+ $('roomList').innerHTML=db.rooms.map(x=>`<div class="item"><span>${safe(x.name)}</span><button class="danger" onclick="delRoom(${x.id})">মুছুন</button></div>`).join('')||'<p class="hint">এখনো কোনো রুম যোগ করা হয়নি।</p>';
+ options('memberRoom',db.rooms,'রুম নির্বাচন করুন');
+ let members=db.members.map(x=>({...x,roomName:db.rooms.find(r=>r.id==x.room)?.name||'রুম নেই'}));
+ $('memberList').innerHTML=members.map(x=>`<div class="item"><span><b>${safe(x.name)}</b><br><small class="muted">${safe(x.phone||'নম্বর নেই')} · ${safe(x.roomName)}</small></span><button class="danger" onclick="delMember(${x.id})">মুছুন</button></div>`).join('')||'<p class="hint">এখনো কোনো সদস্য যোগ করা হয়নি।</p>';
+ ['mealMember','marketBuyer','payMember'].forEach(id=>options(id,db.members,'সদস্য নির্বাচন করুন'));
+ $('mealList').innerHTML=db.meals.slice().reverse().map(x=>`<div class="item"><span>${safe(memberName(x.member))}<br><small class="muted">${safe(x.date)}</small></span><span class="amount">${x.count} মিল <button class="danger" onclick="delItem('meals',${x.id})">মুছুন</button></span></div>`).join('')||'<p class="hint">মিলের তথ্য নেই।</p>';
+ $('marketList').innerHTML=db.markets.slice().reverse().map(x=>`<div class="item"><span>${safe(x.note)}<br><small class="muted">${safe(x.date)} · ${safe(memberName(x.buyer))}</small></span><span class="amount">${money(x.amount)} <button class="danger" onclick="delItem('markets',${x.id})">মুছুন</button></span></div>`).join('')||'<p class="hint">বাজারের তথ্য নেই।</p>';
+ $('paymentList').innerHTML=db.payments.slice().reverse().map(x=>`<div class="item"><span>${safe(memberName(x.member))}<br><small class="muted">${safe(x.date)} · ${safe(x.note||'জমা')}</small></span><span class="amount">${money(x.amount)} <button class="danger" onclick="delItem('payments',${x.id})">মুছুন</button></span></div>`).join('')||'<p class="hint">জমার তথ্য নেই।</p>';
+ $('reportResult').innerHTML=`
+ <div class="grid">
+ <div class="stat"><small>মোট মিল</small><strong>${r.totalMeals}</strong></div>
+ <div class="stat"><small>মোট বাজার</small><strong>${money(r.totalMarket)}</strong></div>
+ <div class="stat"><small>মিল রেট</small><strong>${money(r.rate)}</strong></div>
+ <div class="stat"><small>মোট জমা</small><strong>${money(r.payments.reduce((s,x)=>s+Number(x.amount),0))}</strong></div>
+ </div><h3 style="margin-top:18px">সদস্যভিত্তিক হিসাব</h3>`+
+ db.members.map(mem=>{
+ let mc=r.meals.filter(x=>x.member==mem.id).reduce((s,x)=>s+Number(x.count),0);
+ let cost=mc*r.rate,paid=r.payments.filter(x=>x.member==mem.id).reduce((s,x)=>s+Number(x.amount),0);
+ let bal=paid-cost;
+ return `<div class="item"><span><b>${safe(mem.name)}</b><br><small class="muted">মিল ${mc} · খরচ ${money(cost)} · জমা ${money(paid)}</small></span><span class="amount" style="color:${bal>=0?'#087b52':'#b42318'}">${bal>=0?'পাওনা ':'বাকি '}${money(Math.abs(bal))}</span></div>`
+ }).join('')||'<p class="hint">সদস্য যোগ করলে এখানে হিসাব দেখা যাবে।</p>';
 }
-function downloadCSV(){
-if(!expenses.length){alert("ডাউনলোড করার মতো হিসাব নেই।");return;}
-let rows=[["Date","Food","Amount BDT","Note"],...expenses.map(x=>[x.date,x.food,x.amount,x.note])];
-let csv="\uFEFF"+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\n");
-let blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
-let url=URL.createObjectURL(blob);
-let a=document.createElement("a");
-a.href=url;a.download="food-expense.csv";a.click();
-URL.revokeObjectURL(url);
+function backup(){
+ let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+ let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='probashi-mess-backup.json';a.click();URL.revokeObjectURL(a.href)
 }
-function resetData(){
-if(!confirm("সব হিসাব ও বাজেট মুছে ফেলবেন?"))return;
-expenses=[];budget=0;
-localStorage.removeItem("foodExpenses");
-localStorage.removeItem("foodBudget");
-document.getElementById("budget").value="";
-render();
+function restoreBackup(){
+ let f=$('restoreFile').files[0];if(!f)return alert('আগে ব্যাকআপ ফাইল নির্বাচন করুন');
+ let reader=new FileReader();
+ reader.onload=()=>{
+ try{
+ let d=JSON.parse(reader.result);
+ if(!Array.isArray(d.members)||!Array.isArray(d.meals)||!Array.isArray(d.rooms)||!Array.isArray(d.markets)||!Array.isArray(d.payments))throw Error();
+ if(confirm('বর্তমান তথ্যের বদলে ব্যাকআপের তথ্য বসবে। চালিয়ে যাবেন?')){db=d;save();alert('ব্যাকআপ ফিরিয়ে আনা হয়েছে।')}
+ }catch(e){alert('ব্যাকআপ ফাইলটি সঠিক নয়।')}
+ };
+ reader.readAsText(f)
 }
+function exportCSV(){
+ let m=$('reportMonth').value||monthNow(),r=reportData(m);
+ let rows=[['সদস্য','মিল','খরচ','জমা','পাওনা/বাকি']];
+ db.members.forEach(mem=>{
+ let meals=r.meals.filter(x=>x.member==mem.id).reduce((s,x)=>s+Number(x.count),0);
+ let cost=meals*r.rate,paid=r.payments.filter(x=>x.member==mem.id).reduce((s,x)=>s+Number(x.amount),0);
+ rows.push([mem.name,meals,cost,paid,paid-cost])
+ });
+ let csv='\ufeff'+rows.map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+ let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='mess-report-'+m+'.csv';a.click();URL.revokeObjectURL(a.href)
+}
+document.querySelectorAll('nav button').forEach(btn=>btn.addEventListener('click',()=>{
+ document.querySelectorAll('.tab').forEach(x=>x.classList.add('hidden'));
+ document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+ $(btn.dataset.tab).classList.remove('hidden');btn.classList.add('active');window.scrollTo(0,0)
+}));
+['mealDate','marketDate','payDate'].forEach(id=>$(id).value=today());
+$('reportMonth').value=monthNow();
+$('reportMonth').addEventListener('change',render);
 render();
 </script>
 </body>
-                                  </html>
+</html>
