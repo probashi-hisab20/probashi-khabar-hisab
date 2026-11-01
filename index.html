@@ -286,4 +286,13 @@ $('reportMonth').addEventListener('change',render);
 render();
 </script>
 </body>
-</html>
+</html><script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./service-worker.js")
+      .catch(function (error) {
+        console.error("Service Worker error:", error);
+      });
+  });
+}
+</script>
